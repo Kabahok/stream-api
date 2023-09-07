@@ -1,97 +1,35 @@
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-//import java.io.FileOutputStream;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.Collections;
-//import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-//        ---------- Запись в файл ----------
 
-//        String text = "Hello world";
-//
-//        try (FileOutputStream fos = new FileOutputStream("notes.txt")) {
-//            fos.write(text.getBytes(), 0, text.getBytes().length);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        List<String> names = Arrays.asList("Jack", "Connor", "Harry", "George", "Samuel", "John");
+        List<String> families = Arrays.asList("Evans", "Young", "Harris", "Wilson", "Davies", "Adamson", "Brown");
+        Collection<Person> persons = new ArrayList<>();
 
+        for (int i = 0; i < 10_000_000; i++) {
+            persons.add(new Person(
+                    names.get(new Random().nextInt(names.size())),
+                    families.get(new Random().nextInt(families.size())),
+                    new Random().nextInt(100),
+                    Sex.values()[new Random().nextInt(Sex.values().length)],
+                    Education.values()[new Random().nextInt(Education.values().length)]
+            ));
+        }
 
-//        ---------- Чтение из файла ----------
-//
-//        try (FileInputStream fin = new FileInputStream("notes.txt")) {
-//            int i;
-//            while ((i =fin.read()) != -1) {
-//                System.out.print((char) i);
-//            }
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+//        1 пункт задачи
+        long countOfMinors = persons.stream().filter(x -> x.getAge() < 18).count();
 
-//        ---------- Чтение и спользование буфера ----------
-//        String text = "Hello world\nGhbdtn";
-//
-//        byte[] buffer = text.getBytes();
-//
-//        try (ByteArrayInputStream in = new ByteArrayInputStream(buffer);
-//        BufferedInputStream fin = new BufferedInputStream(in)) {
-//            int i;
-//
-//            while ((i = fin.read()) != -1) {
-//                System.out.print((char) i);
-//            }
-//
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+//        2 пункт задачи
+        List<String> listOfConscript = persons.stream().filter(x -> (x.getAge() <= 27 && x.getAge() >= 18)).map(Person::getFamily).collect(Collectors.toList());
 
-//        ---------- Запись с испоьзованием буфера ----------
-
-//        String text = "Hello world!";
-//        try (FileOutputStream out = new FileOutputStream("notes.txt");
-//        BufferedOutputStream fout = new BufferedOutputStream(out)) {
-//
-//            fout.write(text.getBytes(), 0, text.getBytes().length);
-//
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-
-//      ----------------------------------------------------------------------------------------------------
-
-//      ---------- Посимвольная запись в файл ----------
-
-//        String text = "Hello world";
-//
-//        try (FileWriter writer = new FileWriter("notes.txt", false)) {
-////          Запись полной строки
-//            writer.write(text);
-//
-////          Запись по символам
-//            writer.write("!");
-//            writer.append("\n");
-//
-////          Очищаем буфер
-//            writer.flush();
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-
-//        ---------- Посимвольное чтение из файла ----------
-
-//        try (FileReader reader = new FileReader("notes.txt")) {
-//            int i;
-//
-//            while ((i = reader.read()) != -1) {
-//                System.out.print((char) i);
-//            }
-//
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
-
+//        3 пункт задачи
+        List<Person> countOfOperable = persons.stream().filter(x -> x.getEducation()
+                .equals(Education.HIGHER)).filter(x -> x.getAge() >= 18
+        && ((x.getSex().equals(Sex.WOMAN) && x.getAge() <= 60)) || (x.getSex().equals(Sex.MAN) && x.getAge() <= 65))
+                .sorted(Comparator.comparing(Person::getFamily))
+                .collect(Collectors.toList());
     }
 }
 
